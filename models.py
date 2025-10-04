@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String, Numeric, Date
+from sqlalchemy import Column, Integer, String, Numeric, Date, Boolean
 from database import Base
 
 class Plant(Base):
@@ -10,4 +10,5 @@ class Plant(Base):
     water_amount = Column(Numeric)
     unit = Column(String)
     frequency_days = Column(Integer)
-    last_watered = Column(Date)
+    last_watered = Column(Date, nullable=True)
+    needs_watering = Column(Boolean, default=1)
