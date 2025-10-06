@@ -4,6 +4,7 @@ from sqlalchemy.ext.hybrid import hybrid_property
 from datetime import date
 
 class Plant(Base):
+
     __tablename__ = "plants"
 
     id = Column(Integer, primary_key=True, index=True)
@@ -21,3 +22,11 @@ class Plant(Base):
 
         days_since_watered = (date.today() - self.last_watered).days
         return days_since_watered >= self.frequency_days
+
+class User(Base):
+    __tablename__ = "users"
+
+    id = Column(Integer, primary_key=True, index=True)
+    email = Column(String, unique=True, index=True, nullable=False)
+    hashed_password = Column(String, nullable=False)
+    is_active = Column(Boolean, default=True)
