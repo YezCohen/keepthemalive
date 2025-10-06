@@ -1,14 +1,6 @@
-import React, { useEffect, useState } from "react";
-import axios from "axios";
+import React from "react";
 
-const PlantList = () => {
-  const [plants, setPlants] = useState([]);
-
-  useEffect(() => {
-    axios.get("http://127.0.0.1:8000/plants/")
-      .then(res => setPlants(res.data))
-      .catch(err => console.error(err));
-  }, []);
+const PlantList = ({plants, onWaterPlant}) => {
 
   const tableStyle = {
     borderCollapse: "collapse",
@@ -34,20 +26,6 @@ const PlantList = () => {
   const trStyle = (index) => ({
     backgroundColor: index % 2 === 0 ? "#ffffff" : "#f9f9f9"
   });
-
-  const waterPlant = (plantId) => {
-  axios.post(`http://127.0.0.1:8000/plants/${plantId}/water/`)
-    .then(res => {
-      // res.data מכיל עכשיו את הצמח המעודכן
-      setPlants(prevPlants => prevPlants.map(p =>
-        p.id === plantId ? res.data : p
-      ));
-    })
-    .catch(err => {
-      console.error(err);
-      alert("לא ניתן להשקות את הצמח כרגע");
-    });
-};
 
   return (
     <div>
@@ -78,7 +56,7 @@ const PlantList = () => {
               <td style={tdStyle}>{plant.last_watered ? new Date(plant.last_watered).toLocaleDateString() : 'N/A'}</td>
               <td style={tdStyle}>{plant.needs_watering ? 'Yes' : 'No'}</td>
               <td style={tdStyle}>
-                <button onClick={() => waterPlant(plant.id)} style={{
+                <button onClick={() => onWaterPlant(plant.id)} style={{
                                                                 padding: "5px 10px",
                                                                 backgroundColor: "#4CAF50",
                                                                 color: "white",

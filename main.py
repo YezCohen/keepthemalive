@@ -11,7 +11,7 @@ Base.metadata.create_all(bind=engine)
 app = FastAPI(title="Keep Them Alive", version="1.0.0")
 
 origins = [
-    "http://localhost:5173",  # your frontend URL
+    "http://localhost:5173",  # frontend URL
 ]
 
 app.add_middleware(
@@ -42,38 +42,7 @@ def create_plant(plant: schemas.PlantCreate, db: Session = Depends(get_db)):
 # Read all plants
 @app.get("/plants/", response_model=list[schemas.Plant])
 def read_plants(db: Session = Depends(get_db)):
-    plants = db.query(models.Plant).all()
-    today = datetime.now().date()
-    result = []
-
-    for plant in plants:
-        last_watered_date = None
-        if plant.last_watered:
-            try:
-                last_watered_date = datetime.strptime(plant.last_watered, "%Y-%m-%d").date()
-            except:
-                pass
-
-        needs_watering = False
-        if last_watered_date:
-            days_since_watered = (today - last_watered_date).days
-            needs_watering = days_since_watered >= plant.frequency_days
-        else:
-            needs_watering = True  # Never watered
-
-        plant_dict = {
-            "id": plant.id,
-            "name": plant.name,
-            "location": plant.location,
-            "water_amount": plant.water_amount,
-            "unit": plant.unit,
-            "frequency_days": plant.frequency_days,
-            "last_watered": plant.last_watered,
-            "needs_watering": needs_watering
-        }
-        result.append(plant_dict)
-
-    return result
+    return db.query(models.Plant).all()
 
 # Update Watering
 @app.post("/plants/{plant_id}/water/", response_model=schemas.Plant)
@@ -82,7 +51,6 @@ def water_plant(plant_id: int, db: Session = Depends(get_db)):
     if not plant:
         raise HTTPException(status_code=404, detail="Plant not found")
     plant.last_watered = date.today()
-    plant.needs_watering = False
     db.commit()
     db.refresh(plant)
     return plant

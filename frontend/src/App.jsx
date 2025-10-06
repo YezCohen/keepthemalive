@@ -21,6 +21,21 @@ function App() {
       });
   }, []);
 
+  
+  const waterPlant = (plantId) => {
+  axios.post(`http://127.0.0.1:8000/plants/${plantId}/water/`)
+    .then(res => {
+      // res.data מכיל עכשיו את הצמח המעודכן
+      setPlants(prevPlants => prevPlants.map(p =>
+        p.id === plantId ? res.data : p
+      ));
+    })
+    .catch(err => {
+      console.error(err);
+      alert("לא ניתן להשקות את הצמח כרגע");
+    });
+};
+
   return (
     <div className="App" style={{ padding: "20px", direction: "rtl" }}>
       <h1>Keep Them Alive 🌱</h1>
@@ -30,7 +45,7 @@ function App() {
 
       {!loading && !error && plants.length === 0 && <p>אין עציצים להצגה</p>}
 
-      {!loading && !error && plants.length > 0 && <PlantList /> }
+      {!loading && !error && plants.length > 0 && <PlantList plants={plants} onWaterPlant={waterPlant}/>  }
     </div>
   );
 }
