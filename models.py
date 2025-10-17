@@ -1,4 +1,5 @@
-from sqlalchemy import Column, Integer, String, Numeric, Date, Boolean
+from sqlalchemy import Column, Integer, String, Numeric, Date, Boolean, ForeignKey
+from sqlalchemy.orm import relationship
 from database import Base
 from sqlalchemy.ext.hybrid import hybrid_property
 from datetime import date
@@ -14,6 +15,8 @@ class Plant(Base):
     unit = Column(String)
     frequency_days = Column(Integer)
     last_watered = Column(Date, nullable=True)
+    owner_id = Column(Integer, ForeignKey("users.id"))
+    owner = relationship("User")
 
     @hybrid_property
     def needs_watering(self):
