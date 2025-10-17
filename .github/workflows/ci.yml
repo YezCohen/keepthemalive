@@ -1,0 +1,35 @@
+name: CI Pipeline
+
+# When to run the workflow
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+# Jobs to run in the workflow
+jobs:
+  build-and-lint:
+    runs-on: ubuntu-latest  # על איזו מכונה וירטואלית להריץ
+
+    steps:
+      # שלב 1: הורדת הקוד מהמאגר למכונה
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      # שלב 2: הגדרת סביבת פייתון
+      - name: Set up Python 3.11
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+
+      # שלב 3: התקנת התלויות של הפרויקט
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      # שלב 4: הרצת ה-Linter לבדיקת איכות הקוד
+      - name: Lint with Ruff
+        run: |
+          ruff check .
