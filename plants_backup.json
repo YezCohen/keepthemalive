@@ -1,0 +1,26 @@
+[
+    {
+        "name": "פוטוס - מחורר",
+        "location": "מדף מעל ספה בסלון",
+        "water_amount": "0.5",
+        "unit": "cup",
+        "frequency_days": 5,
+        "last_watered": "2025-10-05"
+    },
+    {
+        "name": "בת-שבע",
+        "location": "מטבח - מעל ארון כחול",
+        "water_amount": "0.5",
+        "unit": "cup",
+        "frequency_days": 5,
+        "last_watered": "2025-10-05"
+    },
+    {
+        "name": "פוטוס",
+        "location": "מטבח - ארוך",
+        "water_amount": "1",
+        "unit": "cup",
+        "frequency_days": 7,
+        "last_watered": "2025-10-06"
+    }
+]
