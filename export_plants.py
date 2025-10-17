@@ -1,6 +1,4 @@
-# export_plants.py
 import json
-from decimal import Decimal
 from database import SessionLocal
 from models import Plant
 
@@ -15,7 +13,7 @@ def export_data():
             plants_data.append({
                 "name": plant.name,
                 "location": plant.location,
-                "water_amount": str(plant.water_amount), # המרה לסטרינג כדי ש-JSON יכיר
+                "water_amount": str(plant.water_amount), # Convert Decimal to string for JSON serialization
                 "unit": plant.unit,
                 "frequency_days": plant.frequency_days,
                 "last_watered": plant.last_watered.isoformat() if plant.last_watered else None,

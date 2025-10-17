@@ -21,7 +21,7 @@ class Plant(Base):
     @hybrid_property
     def needs_watering(self):
         if not self.last_watered:
-            return True  # אם מעולם לא הושקה, צריך להשקות
+            return True  # if never watered, it needs watering
 
         days_since_watered = (date.today() - self.last_watered).days
         return days_since_watered >= self.frequency_days

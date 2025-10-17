@@ -4,9 +4,11 @@ from typing import Annotated
 from fastapi import FastAPI, Depends, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 
-from datetime import datetime, date
+from datetime import date
 from sqlalchemy.orm import Session
-import models, schemas, security
+import models
+import schemas
+import security
 from database import SessionLocal, engine, Base
 
 Base.metadata.create_all(bind=engine)
@@ -108,15 +110,6 @@ def create_user(user: schemas.UserCreate, db: Session = Depends(get_db)):
     db_user = db.query(models.User).filter(models.User.email == user.email).first()
     if db_user:
         raise HTTPException(status_code=400, detail="Email already registered")
-    
-    # --- הוסף את ארבע השורות הבאות כאן ---
-    print("--- DEBUGGING PASSWORD ---")
-    print(f"Password Type: {type(user.password)}")
-    print(f"Password Value: '{user.password}'")
-    print(f"Password Length: {len(user.password)}")
-    print(f"Password Representation (repr): {repr(user.password)}")
-    print("--------------------------")
-    # ------------------------------------
 
     # Create user with hashed password
     hashed_password = security.get_password_hash(user.password)

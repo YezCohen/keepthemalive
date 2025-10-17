@@ -1,11 +1,10 @@
-# import_plants.py
 import json
 from decimal import Decimal
 from datetime import date
 from database import SessionLocal
 from models import Plant
 
-# --- שנה את הערך כאן ל-ID שרשמת בצד ---
+# ---  User that we want to import the plants to ---
 NEW_USER_ID = 1
 # -----------------------------------------
 
@@ -25,7 +24,7 @@ def import_data():
                 unit=plant_dict["unit"],
                 frequency_days=plant_dict["frequency_days"],
                 last_watered=date.fromisoformat(plant_dict["last_watered"]) if plant_dict["last_watered"] else None,
-                owner_id=NEW_USER_ID  # <-- כאן קורה הקסם
+                owner_id=NEW_USER_ID # Assign to the new user ID
             )
             db.add(new_plant)
             
