@@ -1,7 +1,6 @@
 import os
 import json
 import time
-from datetime import date
 from kafka import KafkaProducer
 from sqlalchemy.orm import Session
 from database import SessionLocal
@@ -37,7 +36,6 @@ def check_plants_and_notify(db: Session, producer: KafkaProducer):
     # Same logic as before to find plants that need watering
     plants_to_water = db.query(models.Plant).all()
     
-    today = date.today()
     notifications_sent = 0
 
     for plant in plants_to_water:
