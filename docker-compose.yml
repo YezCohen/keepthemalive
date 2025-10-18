@@ -47,11 +47,36 @@ services:
     environment:
       KAFKA_BROKER_ID: 1
       KAFKA_ZOOKEEPER_CONNECT: 'zookeeper:2181'
-      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_INTERNAL:PLAINTEXT
-      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092,PLAINTEXT_INTERNAL://localhost:29092
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
-      KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 1
-      KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
-      
+      KAFKA_AUTO_CREATE_TOPICS_ENABLE: 'true'
+  
+  producer:
+    build: . # Uses the same Dockerfile as the backend
+    command: python producer.py # Override the default command to run producer.py
+    volumes:
+      - .:/app
+    environment:
+      - DATABASE_URL=postgresql://user:password@db/plants_db
+      - KAFKA_BOOTSTRAP_SERVERS=kafka:9092
+      - PLANTS_TOPIC=watering_schedule
+      - PYTHONUNBUFFERED=1
+    depends_on:
+      - db
+      - kafka
+  
+  consumer:
+    build: .
+    command: python consumer.py
+    volumes:
+      - .:/app
+    environment:
+      - KAFKA_BOOTSTRAP_SERVERS=kafka:9092
+      - PLANTS_TOPIC=watering_schedule
+      - PYTHONUNBUFFERED=1
+    depends_on:
+      - kafka
+
 volumes:
   postgres_data: # Official setup of the volume to save DB data
